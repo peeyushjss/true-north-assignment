@@ -1,7 +1,9 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { AppService } from './app.service';
+import { App } from './app';
 
 @Component({
   selector: 'app-root',
@@ -12,23 +14,16 @@ import { MatTableDataSource } from '@angular/material/table';
 export class AppComponent {
   title = 'true-north-assignment';
 
-  displayedColumns = ['id', 'name', 'progress', 'color'];
-  dataSource: MatTableDataSource<UserData>;
+  displayedColumns = ['name', 'email', 'location', 'dob', 'phone'];
+
+  angData = [];
+
+  dataSource: MatTableDataSource<App>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor() {
-    // Create 100 users
-    const users: UserData[] = [];
-    for (let i = 1; i <= 100; i++) { users.push(createNewUser(i)); }
-
-
-    console.log("Users:::::::::::", users);
-
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
-  }
+  constructor(private appService: AppService) { }
 
   /**
    * Set the paginator and sort after the view init since this component will
@@ -44,32 +39,21 @@ export class AppComponent {
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
-}
 
-/** Builds and returns a new User. */
-function createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] + ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) + '.';
+  ngOnInit() {
 
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    color: COLORS[Math.round(Math.random() * (COLORS.length - 1))]
-  };
-}
+    let myData: any[] = [];
 
-/** Constants used to fill up our data base. */
-const COLORS = ['maroon', 'red', 'orange', 'yellow', 'olive', 'green', 'purple',
-  'fuchsia', 'lime', 'teal', 'aqua', 'blue', 'navy', 'black', 'gray'];
-const NAMES = ['Maia', 'Asher', 'Olivia', 'Atticus', 'Amelia', 'Jack',
-  'Charlotte', 'Theodore', 'Isla', 'Oliver', 'Isabella', 'Jasper',
-  'Cora', 'Levi', 'Violet', 'Arthur', 'Mia', 'Thomas', 'Elizabeth'];
+    this.appService.getData().subscribe((data: any[]) => {
+      myData = data;
+      console.log(myData['results']);
+    });
 
-export interface UserData {
-  id: string;
-  name: string;
-  progress: string;
-  color: string;
+    this.angData = myData['results'];
+
+    this.dataSource = new MatTableDataSource(myData['results']);
+
+  }
+
+
 }

@@ -28,6 +28,6 @@
 
 <mat-menu #contextMenu="matMenu" #contextMenu2="matMenu">
     <ng-template matMenuContent>
-        <button mat-menu-item (click)="applyFilter($event.target.innerText)">Nando Louis</button>
+        <button mat-menu-item *ngFor="let name of getUniqueName" (click)="applyFilter($event.target.innerText)">{{name}}</button>
     </ng-template>
 </mat-menu>

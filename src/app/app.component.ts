@@ -17,6 +17,7 @@ export class AppComponent {
 
   title = 'true-north-assignment';
   displayedColumns = ['Name', 'Email', 'City', 'DOB', 'Phone'];
+  getUniqueName = [];
 
   dataSource: MatTableDataSource<App>;
 
@@ -27,11 +28,11 @@ export class AppComponent {
 
   contextMenuPosition = { x: "0px", y: "0px" };
 
+  /* This method is used for right click on header */
   onContextMenu(event: MouseEvent) {
     event.preventDefault();
     this.contextMenuPosition.x = event.clientX + "px";
     this.contextMenuPosition.y = event.clientY + "px";
-    // this.contextMenu.menuData = { 'item': item };
     this.contextMenu.menu.focusFirstItem("mouse");
     this.contextMenu.openMenu();
   }
@@ -41,6 +42,7 @@ export class AppComponent {
     private datePipe: DatePipe
   ) { }
 
+  /* Method to filter the data */
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
@@ -48,9 +50,9 @@ export class AppComponent {
   }
 
   ngOnInit() {
-
     let displayData: any[] = [];
 
+    /* Trigger API for getting the data */
     this.appService.getData().subscribe((data: any[]) => {
       for (let i = 0; i < data['results'].length; i++) {
         let results = data['results'],
@@ -64,6 +66,15 @@ export class AppComponent {
         });
       }
 
+      /* Logic to find unique name */
+      let uniqueNames = [];
+      for (let i = 0; i < displayData.length; i++) {
+        if (uniqueNames.indexOf(displayData[i].Name) === -1) {
+          uniqueNames.push(displayData[i].Name);
+        }
+      }
+
+      this.getUniqueName = uniqueNames;
       this.dataSource = new MatTableDataSource(displayData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

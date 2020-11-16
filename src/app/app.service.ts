@@ -11,7 +11,7 @@ export class AppService {
   constructor(private http: HttpClient) { }
 
   allData = [];
-  apiUrl = "https://randomuser.me/api/?results=5&inc=name,email,dob,phone,location";
+  apiUrl = "https://randomuser.me/api/?results=200&inc=name,email,dob,phone,location";
 
   getData(): Observable<App[]> {
     // return of(this.allData);

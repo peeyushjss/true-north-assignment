@@ -13,7 +13,7 @@
         <!-- Name Column -->
         <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.name}} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{row.name.first}} {{row.name.last}}</mat-cell>
         </ng-container>
 
         <!-- Email Column -->
@@ -25,13 +25,13 @@
         <!-- Location Column -->
         <ng-container matColumnDef="location">
             <mat-header-cell *matHeaderCellDef mat-sort-header> Location </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.location}} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{row.location.city}} </mat-cell>
         </ng-container>
 
         <!-- DOB Column -->
         <ng-container matColumnDef="dob">
             <mat-header-cell *matHeaderCellDef mat-sort-header> DOB </mat-header-cell>
-            <mat-cell *matCellDef="let row"> {{row.dob}} </mat-cell>
+            <mat-cell *matCellDef="let row"> {{row.dob.date}} </mat-cell>
         </ng-container>
 
         <!-- Phone Column -->

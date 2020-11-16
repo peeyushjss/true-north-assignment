@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { AppService } from './app.service';
 import { App } from './app';
 
@@ -22,6 +23,19 @@ export class AppComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
+  @ViewChild(MatMenuTrigger) contextMenu: MatMenuTrigger;
+
+  contextMenuPosition = { x: "0px", y: "0px" };
+
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+    this.contextMenuPosition.x = event.clientX + "px";
+    this.contextMenuPosition.y = event.clientY + "px";
+    // this.contextMenu.menuData = { 'item': item };
+    this.contextMenu.menu.focusFirstItem("mouse");
+    this.contextMenu.openMenu();
+  }
+
   constructor(
     private appService: AppService,
     private datePipe: DatePipe
@@ -35,12 +49,9 @@ export class AppComponent {
 
   ngOnInit() {
 
-    let myData: any[] = [],
-      displayData: any[] = [];
+    let displayData: any[] = [];
 
     this.appService.getData().subscribe((data: any[]) => {
-      myData = data;
-
       for (let i = 0; i < data['results'].length; i++) {
         let results = data['results'],
           eachResult = results[i];
@@ -60,6 +71,5 @@ export class AppComponent {
     });
 
   }
-
 
 }

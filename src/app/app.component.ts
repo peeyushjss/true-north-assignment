@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DatePipe } from '@angular/common';
 import { AppService } from './app.service';
 import { App } from './app';
 
@@ -12,16 +13,19 @@ import { App } from './app';
 })
 
 export class AppComponent {
-  title = 'true-north-assignment';
 
-  displayedColumns = ['name', 'email', 'location', 'dob', 'phone'];
+  title = 'true-north-assignment';
+  displayedColumns = ['Name', 'Email', 'City', 'DOB', 'Phone'];
 
   dataSource: MatTableDataSource<App>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private appService: AppService) { }
+  constructor(
+    private appService: AppService,
+    private datePipe: DatePipe
+  ) { }
 
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
@@ -31,13 +35,25 @@ export class AppComponent {
 
   ngOnInit() {
 
-    let myData: any[] = [];
+    let myData: any[] = [],
+      displayData: any[] = [];
 
     this.appService.getData().subscribe((data: any[]) => {
       myData = data;
-      console.log(myData['results']);
-      this.dataSource = new MatTableDataSource(myData['results']);
 
+      for (let i = 0; i < data['results'].length; i++) {
+        let results = data['results'],
+          eachResult = results[i];
+        displayData.push({
+          'Name': eachResult.name.first + " " + eachResult.name.last,
+          'Phone': eachResult.phone,
+          'Email': eachResult.email,
+          'City': eachResult.location.city,
+          'DOB': this.datePipe.transform(eachResult.dob.date, 'yyyy-MM-dd')
+        });
+      }
+
+      this.dataSource = new MatTableDataSource(displayData);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
 
